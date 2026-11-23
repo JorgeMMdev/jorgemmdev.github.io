@@ -7,19 +7,41 @@ import BackToTop from '../components/BackToTop.astro';
 interface Props {
   title: string;
   description?: string;
+  image?: string;
 }
 const {
   title,
   description = 'Portfolio de Jorge Muñoz: inteligencia artificial, datos y desarrollo de software.',
+  image = '/og-image.png',
 } = Astro.props;
+
+// Las redes sociales necesitan URLs completas, con https://
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const imageUrl = new URL(image, Astro.site);
 ---
 <!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description} />
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph: LinkedIn, WhatsApp, Facebook... -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Jorge Muñoz · Desarrollador de software, IA y datos" />
+    <meta property="og:locale" content="es_ES" />
+
+    <!-- X (Twitter) -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={imageUrl} />
   </head>
   <body class="min-h-screen overflow-x-hidden bg-bg font-sans text-ink antialiased">
     <Header />
