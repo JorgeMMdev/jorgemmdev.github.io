@@ -4,7 +4,7 @@ import { z } from 'astro/zod';
 
 const projects = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/projects' }),
-  // El esquema pasa a ser una función que recibe el ayudante image()
+  // El esquema es una función que recibe el ayudante image()
   schema: ({ image }) =>
     z.object({
       title: z.string(),
@@ -16,7 +16,7 @@ const projects = defineCollection({
       date: z.coerce.date(),
       repo: z.string().url().optional(),
       demo: z.string().url().optional(),
-      image: image().optional(),   // ← antes: z.string().optional()
+      image: image().optional(),
       draft: z.boolean().default(false),
     }),
 });

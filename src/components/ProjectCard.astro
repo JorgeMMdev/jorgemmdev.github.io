@@ -1,10 +1,10 @@
 ---
-import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
 
 interface Props {
-  project: CollectionEntry<'projects'>; // un proyecto de la colección, con su tipo
-  index: number;                        // posición en la lista (0, 1, 2...)
+  project: CollectionEntry<'projects'>;
+  index: number;
 }
 const { project, index } = Astro.props;
 const { title, category, summary, tech, status, repo, image, draft } = project.data;
@@ -46,15 +46,15 @@ const reverse = index % 2 === 1;                    // las impares, con la image
     </div>
   </div>
 
- <div
-  class:list={[
-    'flex aspect-video items-center justify-center overflow-hidden rounded-[20px] font-mono text-[13px] text-ink-muted',
-    reverse && 'lg:order-first',
-  ]}
-  style="background: repeating-linear-gradient(135deg, #1c1838 0 12px, #15122a 12px 24px)"
->
-  {image
-    ? <Image src={image} alt={`Captura de ${title}`} width={1200} class="size-full object-cover" />
-    : <span>[Captura pendiente]</span>}
-</div>
+  <div
+    class:list={[
+      'flex aspect-video items-center justify-center overflow-hidden rounded-[20px] font-mono text-[13px] text-ink-muted',
+      reverse && 'lg:order-first',
+    ]}
+    style="background: repeating-linear-gradient(135deg, #1c1838 0 12px, #15122a 12px 24px)"
+  >
+    {image
+      ? <Image src={image} alt={`Captura de ${title}`} width={1200} class="size-full object-cover" />
+      : <span>[Captura pendiente]</span>}
+  </div>
 </article>
