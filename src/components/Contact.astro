@@ -1,21 +1,82 @@
 ---
-import { site } from '../data/site';
+import { site } from "../data/site";
 ---
-<section id="contacto" aria-labelledby="contacto-titulo" class="mx-auto max-w-[1240px] px-6 pb-24">
-  <a href={`mailto:${site.email}`} class="group block rounded-[32px] bg-primary px-8 py-14 text-bg md:px-12 md:py-16">
-    <p class="font-mono text-sm">[Busco prácticas / mi primer empleo en IA…] Escríbeme:</p>
+
+<section
+  id="contacto"
+  aria-labelledby="contacto-titulo"
+  class="mx-auto max-w-[1240px] px-6 pb-24"
+>
+  <div class="rounded-[32px] bg-primary px-8 py-14 text-bg md:px-12 md:py-16">
     <h2
       id="contacto-titulo"
-      class="mt-3 flex flex-wrap items-center gap-6 font-display text-[clamp(3.5rem,9vw,6.5rem)] leading-[0.9] font-bold tracking-[-0.05em]"
+      class="mt-3 font-display text-[clamp(3.5rem,9vw,6.5rem)] leading-[0.9] font-bold tracking-[-0.05em]"
     >
       ¿Hablamos?
-      <svg
-        class="size-[0.8em] transition-transform duration-300 group-hover:translate-x-2 group-hover:-translate-y-2"
-        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
-      >
-        <path d="M7 17L17 7M8 7h9v9" />
-      </svg>
     </h2>
-  </a>
+
+    <div class="mt-10 flex flex-wrap items-center gap-3">
+      <!-- Email visible + botón para copiarlo -->
+      <div class="flex flex-wrap items-center gap-2 rounded-full bg-bg py-1.5 pr-1.5 pl-5 text-ink">
+        <span class="font-mono text-sm md:text-base">{site.email}</span>
+        <button
+          id="copy-email"
+          type="button"
+          data-email={site.email}
+          class="inline-flex min-h-11 items-center rounded-full bg-accent px-5 font-semibold text-bg transition-transform hover:scale-105"
+        >
+          Copiar
+        </button>
+      </div>
+
+      <!-- En móvil: abre la app de correo -->
+      <a
+        href={`mailto:${site.email}`}
+        class="inline-flex min-h-13 items-center rounded-full border-2 border-bg px-5.5 font-semibold transition-colors hover:bg-bg hover:text-ink md:hidden"
+      >
+        Abrir en mi correo
+      </a>
+
+      <!-- En ordenador: abre Gmail en una pestaña nueva -->
+      <a
+        href={`https://mail.google.com/mail/?view=cm&to=${site.email}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hidden min-h-13 items-center rounded-full border-2 border-bg px-5.5 font-semibold transition-colors hover:bg-bg hover:text-ink md:inline-flex"
+      >
+        Escribir con Gmail
+      </a>
+      <a
+        href={site.linkedin}
+        class="inline-flex min-h-13 items-center rounded-full border-2 border-bg px-5.5 font-semibold transition-colors hover:bg-bg hover:text-ink"
+      >
+        LinkedIn
+      </a>
+    </div>
+
+    <!-- Mensaje para lectores de pantalla cuando se copia -->
+    <p id="copy-status" class="sr-only" aria-live="polite"></p>
+  </div>
 </section>
+
+<script>
+  const button = document.getElementById("copy-email") as HTMLButtonElement;
+  const status = document.getElementById("copy-status") as HTMLParagraphElement;
+
+  button.addEventListener("click", async () => {
+    const email = button.dataset.email ?? "";
+    try {
+      await navigator.clipboard.writeText(email);
+      button.textContent = "¡Copiado!";
+      status.textContent = "Email copiado al portapapeles";
+    } catch {
+      // Si el navegador no deja copiar, al menos se abre el correo
+      window.location.href = `mailto:${email}`;
+      return;
+    }
+    setTimeout(() => {
+      button.textContent = "Copiar";
+      status.textContent = "";
+    }, 2000);
+  });
+</script>

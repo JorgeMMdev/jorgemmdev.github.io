@@ -18,7 +18,7 @@ export const experience: Job[] = [
     role: 'Desarrollador full stack (prácticas)',
     company: 'EyeSeeTea',
     period: 'Mar 2025 — Jun 2025',
-    // description: 'Qué hiciste allí, en una o dos líneas.',
+    description: 'Colaboré en proyectos reales usando TypeScript y React.',
   },
   {
     role: 'Técnico de hardware (prácticas)',
