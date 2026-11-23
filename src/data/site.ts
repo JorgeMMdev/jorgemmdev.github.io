@@ -4,5 +4,5 @@ export const site = {
   email: 'jorgemunoz575@gmail.com',
   github: 'https://github.com/JorgeMMdev',
   linkedin: 'https://www.linkedin.com/in/jorge-mu%C3%B1ozmartinez/',
-  cv: '/CV-Jorge-Muñoz-Martínez.pdf',
+  cv: '/cv-jorge-munoz.pdf',
 };

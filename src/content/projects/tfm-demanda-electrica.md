@@ -7,6 +7,7 @@ status: terminado
 order: 1
 date: 2026-06-01
 draft: true
+image: ../../assets/projects/tfm-portada.jpg
 ---
 
 ## El problema

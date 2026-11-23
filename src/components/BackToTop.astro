@@ -1,0 +1,40 @@
+<button
+  id="back-to-top"
+  type="button"
+  aria-label="Volver arriba"
+  aria-hidden="true"
+  tabindex="-1"
+  class="pointer-events-none fixed right-6 bottom-6 z-50 flex size-14 translate-y-4 items-center justify-center rounded-full bg-accent text-bg opacity-0 shadow-lg shadow-black/40 transition duration-300 hover:scale-110 data-visible:pointer-events-auto data-visible:translate-y-0 data-visible:opacity-100"
+>
+  <svg
+    class="size-6"
+    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+  >
+    <path d="M12 19V5M5 12l7-7 7 7" />
+  </svg>
+</button>
+
+<script>
+  const button = document.getElementById('back-to-top') as HTMLButtonElement;
+  const SHOW_AFTER = 600; // píxeles de scroll a partir de los que aparece
+
+  // Muestra u oculta el botón según cuánto se ha bajado
+  function update() {
+    const visible = window.scrollY > SHOW_AFTER;
+    button.toggleAttribute('data-visible', visible);
+    button.tabIndex = visible ? 0 : -1;
+    button.setAttribute('aria-hidden', String(!visible));
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  update(); // por si la página se carga ya bajada (p. ej. al recargar)
+
+  button.addEventListener('click', () => {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+
+    // Lleva el foco del teclado al logo, porque el botón va a desaparecer
+    document.querySelector<HTMLElement>('header a')?.focus({ preventScroll: true });
+  });
+</script>
