@@ -1,0 +1,20 @@
+---
+import SectionTitle from './SectionTitle.astro';
+import { experience } from '../data/cv';
+---
+<section id="experiencia" aria-labelledby="experiencia-titulo" class="mx-auto max-w-[1240px] px-6 pb-28">
+  <SectionTitle id="experiencia-titulo" title="Experiencia" />
+
+  <ol class="divide-y divide-line border-y border-line">
+    {experience.map((job) => (
+      <li class="grid gap-2 py-8 md:grid-cols-[220px_1fr] md:gap-10">
+        <p class="font-mono text-[13px] text-accent">{job.period}</p>
+        <div>
+          <h3 class="font-display text-2xl font-bold md:text-[28px]">{job.role}</h3>
+          <p class="mt-1 text-ink-soft">{job.company}</p>
+          {job.description && <p class="mt-3 max-w-2xl text-ink-soft">{job.description}</p>}
+        </div>
+      </li>
+    ))}
+  </ol>
+</section>

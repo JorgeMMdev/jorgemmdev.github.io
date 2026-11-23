@@ -1,0 +1,27 @@
+---
+import SectionTitle from './SectionTitle.astro';
+import { education } from '../data/cv';
+---
+<section id="formacion" aria-labelledby="formacion-titulo" class="mx-auto max-w-[1240px] px-6 pb-28">
+  <SectionTitle id="formacion-titulo" title="Formación" />
+
+  <ol class="grid gap-6 md:grid-cols-2">
+    {education.map((study) => (
+      <li
+        class:list={[
+          'flex flex-col gap-2.5 rounded-[28px] p-8',
+          study.current ? 'bg-accent text-bg' : 'border border-line bg-surface',
+        ]}
+      >
+        <p class:list={['font-mono text-[13px] uppercase', !study.current && 'text-accent']}>
+          {study.period}{study.current && ' · En curso'}
+        </p>
+        <h3 class="font-display text-[28px] leading-[1.1] font-bold">{study.title}</h3>
+        <p class:list={[!study.current && 'text-ink-soft']}>{study.center}</p>
+        {study.note && (
+          <p class:list={['text-sm', study.current ? 'text-bg' : 'text-ink-muted']}>{study.note}</p>
+        )}
+      </li>
+    ))}
+  </ol>
+</section>

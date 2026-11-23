@@ -1,8 +1,9 @@
 ---
 const links = [
-  { href: '#proyectos', label: 'Proyectos' },
-  { href: '#sobre-mi', label: 'Sobre mí' },
-  { href: '#formacion', label: 'Formación' },
+  { href: '/#proyectos', label: 'Proyectos' },
+  { href: '/#experiencia', label: 'Experiencia' },
+  { href: '/#formacion', label: 'Formación' },
+  { href: '/#sobre-mi', label: 'Sobre mí' },
 ];
 ---
 <header class="mx-auto flex max-w-[1240px] flex-wrap items-center justify-between gap-4 p-6">
@@ -19,7 +20,7 @@ const links = [
       <a href={link.href} class="transition-colors hover:text-accent">{link.label}</a>
     ))}
     <a
-      href="#contacto"
+      href="/#contacto"
       class="inline-flex min-h-11 items-center rounded-full bg-accent px-5 font-semibold text-bg transition-transform hover:scale-105"
     >
       Contacto

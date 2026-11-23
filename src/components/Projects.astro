@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import SectionTitle from './SectionTitle.astro';
+import ProjectCard from './ProjectCard.astro';
+
+// En local (npm run dev) se ven también los borradores; en la web publicada, no
+const projects = (
+  await getCollection('projects', ({ data }) => import.meta.env.DEV || !data.draft)
+).sort((a, b) => a.data.order - b.data.order);
+---
+<section id="proyectos" aria-labelledby="proyectos-titulo" class="mx-auto max-w-[1240px] px-6 pt-30 pb-28">
+  <SectionTitle
+    id="proyectos-titulo"
+    title="Proyectos"
+    subtitle="Proyectos que conectan datos, inteligencia artificial y producto."
+  />
+
+  {projects.length > 0 ? (
+    <div class="flex flex-col gap-8">
+      {projects.map((project, index) => <ProjectCard project={project} index={index} />)}
+    </div>
+  ) : (
+    <p class="font-mono text-ink-muted">Próximamente.</p>
+  )}
+</section>

@@ -1,35 +1,37 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import Layout from '../layouts/Layout.astro';
 import SkillGraph from '../components/SkillGraph.astro';
+import TechMarquee from '../components/TechMarquee.astro';
+import Projects from '../components/Projects.astro';
+import Experience from '../components/Experience.astro';
+import Education from '../components/Education.astro';
+import About from '../components/About.astro';
+import Contact from '../components/Contact.astro';
+import { site } from '../data/site';
 
 const buttons = [
-  { href: "https://github.com/JorgeMMdev", label: "GitHub" },
-  { href: "#", label: "LinkedIn" },
-  { href: "#", label: "CV ↓" },
+  { href: site.github, label: 'GitHub' },
+  { href: site.linkedin, label: 'LinkedIn' },
+  { href: site.cv, label: 'CV ↓' },
 ];
 ---
-
-<Layout title="Jorge Muñoz | Bases de datos, IA y desarrollo web">
-  <section
-    id="inicio"
-    class="mx-auto flex max-w-[1240px] flex-wrap items-center gap-10 px-6 pt-14 pb-24"
-  >
+<Layout title="Jorge Muñoz | Desarrollador de software · IA y datos">
+  <section id="inicio" class="mx-auto flex max-w-[1240px] flex-wrap items-center gap-10 px-6 pt-14 pb-24">
     <div class="min-w-0 flex-[1_1_520px]">
       <p class="inline-flex items-center gap-2.5 rounded-full border border-line px-3.5 py-1.5 font-mono text-[13px] text-ink-soft">
         <span aria-hidden="true" class="size-2 rounded-full bg-accent"></span>
-        Bases de datos · IA · Web
+        IA · Datos · Desarrollo
       </p>
 
       <h1 class="mt-7 font-display text-[clamp(4rem,11vw,8.5rem)] leading-[0.88] font-bold tracking-[-0.05em]">
-        Jorge
-        <br />
+        Jorge<br />
         <span class="text-outline">Muñoz</span>
       </h1>
 
       <p class="mt-8 max-w-[520px] text-[19px] text-ink-soft">
-        Conecto datos, modelos e interfaces. Técnico en DAM,{" "}
-        <strong class="font-semibold text-ink">Máster en IA</strong> y cursando
-        DAW, desde Jaén.
+        Del código al modelo. Técnico en DAM,{' '}
+        <strong class="font-semibold text-ink">Máster en IA y Big Data</strong>{' '}
+        y cursando DAW, desde Jaén.
       </p>
 
       <div class="mt-9 flex flex-wrap gap-3">
@@ -50,6 +52,13 @@ const buttons = [
       </div>
     </div>
 
-      <SkillGraph />
+    <SkillGraph />
   </section>
+
+  <TechMarquee />
+  <Projects />
+  <Experience />
+  <Education />
+  <About />
+  <Contact />
 </Layout>

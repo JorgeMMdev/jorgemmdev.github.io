@@ -1,0 +1,39 @@
+---
+const techs = [
+  'Python', 'Deep Learning', 'Series temporales', 'Modelos de grafos', 'Scikit-learn',
+  'Pandas', 'SQL', 'MongoDB', 'Spark', 'Databricks', 'Java', 'JavaScript', 'PHP', 'HTML & CSS',
+];
+---
+<div class="-mx-12 -rotate-2 overflow-hidden bg-accent py-4 text-bg">
+  <div class="track flex w-max">
+    {[0, 1].map((copy) => (
+      <ul
+        aria-hidden={copy === 1 ? 'true' : undefined}
+        class="flex shrink-0 items-center font-display text-[clamp(1.5rem,3vw,2rem)] font-bold whitespace-nowrap"
+      >
+        {techs.map((tech) => (
+          <li class="flex items-center">
+            <span class="px-5">{tech}</span>
+            <span aria-hidden="true">/</span>
+          </li>
+        ))}
+      </ul>
+    ))}
+  </div>
+</div>
+
+<style>
+  .track {
+    animation: scroll 40s linear infinite;
+  }
+  @keyframes scroll {
+    to { translate: -50% 0; }
+  }
+  /* Se para al pasar el ratón, para poder leerla */
+  .track:hover {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .track { animation: none; }
+  }
+</style>

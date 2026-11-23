@@ -7,7 +7,7 @@ interface GraphNode {
   id: string;
   label: string[];      // una o dos líneas de texto
   kind: NodeKind;
-  x: number;            // posición dentro del viewBox (560 x 520)
+  x: number;            // posición dentro del viewBox (560 x 540)
   y: number;
   labelBelow?: boolean; // para tecnologías: texto debajo del punto en vez de encima
 }
@@ -20,38 +20,61 @@ interface GraphEdge {
 
 // ───────── 2. DATOS ─────────
 const nodes: GraphNode[] = [
+  // Centro
   { id: 'jorge', label: ['Jorge'], kind: 'persona', x: 280, y: 260 },
 
+  // Áreas
   { id: 'bd',  label: ['Bases', 'de datos'], kind: 'area', x: 140, y: 120 },
   { id: 'ia',  label: ['IA'],                kind: 'area', x: 440, y: 130 },
   { id: 'web', label: ['Web y', 'móvil'],    kind: 'area', x: 300, y: 430 },
 
-  { id: 'sql',   label: ['SQL'],           kind: 'tecnologia', x: 190, y: 30 },
-  { id: 'mongo', label: ['MongoDB'],       kind: 'tecnologia', x: 50,  y: 60 },
-  { id: 'neo4j', label: ['Neo4j'],         kind: 'tecnologia', x: 40,  y: 190, labelBelow: true },
-  { id: 'dl',    label: ['Deep Learning'], kind: 'tecnologia', x: 520, y: 50 },
-  { id: 'mlops', label: ['MLOps'],         kind: 'tecnologia', x: 530, y: 220, labelBelow: true },
-  { id: 'astro', label: ['Astro'],         kind: 'tecnologia', x: 170, y: 480, labelBelow: true },
-  { id: 'ionic', label: ['Ionic'],         kind: 'tecnologia', x: 430, y: 490, labelBelow: true },
+  // Bases de datos
+  { id: 'sql',   label: ['SQL'],     kind: 'tecnologia', x: 190, y: 30 },
+  { id: 'mongo', label: ['MongoDB'], kind: 'tecnologia', x: 50,  y: 60 },
+  { id: 'spark', label: ['Spark'],   kind: 'tecnologia', x: 40,  y: 190, labelBelow: true },
 
+  // IA
+  { id: 'dl',     label: ['Deep Learning'],        kind: 'tecnologia', x: 500, y: 30 },
+  { id: 'python', label: ['Python'],               kind: 'tecnologia', x: 535, y: 100 },
+  { id: 'series', label: ['Series', 'temporales'], kind: 'tecnologia', x: 520, y: 195, labelBelow: true },
+  { id: 'grafos', label: ['Modelos', 'de grafos'], kind: 'tecnologia', x: 420, y: 245, labelBelow: true },
+
+  // Web y móvil
+  { id: 'htmlcss', label: ['HTML & CSS'], kind: 'tecnologia', x: 190, y: 380 },
+  { id: 'java',    label: ['Java'],       kind: 'tecnologia', x: 175, y: 480, labelBelow: true },
+  { id: 'php',     label: ['PHP'],        kind: 'tecnologia', x: 300, y: 505, labelBelow: true },
+  { id: 'js',      label: ['JavaScript'], kind: 'tecnologia', x: 425, y: 485, labelBelow: true },
+
+  // Proyectos
   { id: 'tfm',   label: ['TFM'],         kind: 'proyecto', x: 360, y: 35 },
   { id: 'banco', label: ['Banco Horas'], kind: 'proyecto', x: 90,  y: 331 },
   { id: 'tfg',   label: ['TFG'],         kind: 'proyecto', x: 470, y: 360 },
 ];
 
 const edges: GraphEdge[] = [
+  // Jorge → áreas
   { from: 'jorge', to: 'bd',  label: ':DOMINA' },
   { from: 'jorge', to: 'ia',  label: ':DOMINA' },
   { from: 'jorge', to: 'web', label: ':DOMINA' },
 
-  { from: 'bd',  to: 'sql' },
-  { from: 'bd',  to: 'mongo' },
-  { from: 'bd',  to: 'neo4j' },
-  { from: 'ia',  to: 'dl' },
-  { from: 'ia',  to: 'mlops' },
-  { from: 'web', to: 'astro' },
-  { from: 'web', to: 'ionic' },
+  // Bases de datos
+  { from: 'bd', to: 'sql' },
+  { from: 'bd', to: 'mongo' },
+  { from: 'bd', to: 'spark' },
 
+  // IA
+  { from: 'ia', to: 'dl' },
+  { from: 'ia', to: 'python' },
+  { from: 'ia', to: 'series' },
+  { from: 'ia', to: 'grafos' },
+
+  // Web y móvil
+  { from: 'web', to: 'htmlcss' },
+  { from: 'web', to: 'java' },
+  { from: 'web', to: 'php' },
+  { from: 'web', to: 'js' },
+
+  // Proyectos
   { from: 'ia',  to: 'tfm' },
   { from: 'bd',  to: 'banco' },
   { from: 'web', to: 'tfg' },
@@ -76,13 +99,13 @@ const pillWidth = (text: string) => Math.max(84, text.length * 7.5 + 28);
 
 <figure class="min-w-0 flex-[1_1_460px]">
   <svg
-    viewBox="0 0 560 520"
+    viewBox="0 0 560 540"
     role="img"
     aria-labelledby="graph-title"
     class="graph block h-auto w-full overflow-visible font-mono"
   >
     <title id="graph-title">
-      Grafo de habilidades: Jorge conectado con Bases de datos, IA y Web, cada una con sus tecnologías y proyectos
+      Grafo de habilidades: Jorge conectado con Bases de datos, IA y Web y móvil, cada una con sus tecnologías y proyectos
     </title>
 
     <!-- Aristas: van primero para quedar DEBAJO de los nodos -->
@@ -155,15 +178,19 @@ const pillWidth = (text: string) => Math.max(84, text.length * 7.5 + 28);
         {node.kind === 'tecnologia' && (
           <>
             <circle cx={node.x} cy={node.y} r="5" class="fill-ink-muted" />
-            <text
-              x={node.x}
-              y={node.labelBelow ? node.y + 22 : node.y - 14}
-              text-anchor="middle"
-              font-size="12"
-              class="fill-ink-soft"
-            >
-              {node.label[0]}
-            </text>
+            {node.label.map((line, i) => (
+              <text
+                x={node.x}
+                y={node.labelBelow
+                  ? node.y + 22 + i * 14
+                  : node.y - 14 - (node.label.length - 1 - i) * 14}
+                text-anchor="middle"
+                font-size="12"
+                class="fill-ink-soft"
+              >
+                {line}
+              </text>
+            ))}
           </>
         )}
 

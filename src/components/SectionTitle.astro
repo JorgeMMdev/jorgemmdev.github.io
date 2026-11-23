@@ -1,0 +1,17 @@
+---
+interface Props {
+  id: string;        // id del <h2>, para la accesibilidad
+  title: string;
+  subtitle?: string;
+}
+const { id, title, subtitle } = Astro.props;
+---
+<div class="mb-14 flex flex-wrap items-end justify-between gap-6">
+  <h2
+    id={id}
+    class="font-display text-[clamp(3rem,7vw,5.5rem)] leading-[0.9] font-bold tracking-[-0.04em]"
+  >
+    {title}<span class="text-accent">.</span>
+  </h2>
+  {subtitle && <p class="max-w-[340px] text-ink-soft">{subtitle}</p>}
+</div>

@@ -1,0 +1,59 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  project: CollectionEntry<'projects'>; // un proyecto de la colección, con su tipo
+  index: number;                        // posición en la lista (0, 1, 2...)
+}
+const { project, index } = Astro.props;
+const { title, category, summary, tech, status, repo, image, draft } = project.data;
+
+const number = String(index + 1).padStart(2, '0'); // 0 → "01"
+const reverse = index % 2 === 1;                    // las impares, con la imagen a la izquierda
+---
+<article class="grid items-center gap-10 rounded-[28px] border border-line bg-surface p-8 md:p-10 lg:grid-cols-2">
+  <div>
+    <p class="text-outline font-display text-[clamp(5rem,10vw,7.5rem)] leading-[0.8] font-bold">
+      {number}
+    </p>
+    <p class="mt-6 font-mono text-[13px] text-accent uppercase">
+      {category}
+      {status === 'en-desarrollo' && ' · En desarrollo'}
+      {draft && ' · Borrador'}
+    </p>
+    <h3 class="mt-2 font-display text-[clamp(1.75rem,3vw,2.25rem)] leading-[1.1] font-bold">
+      {title}
+    </h3>
+    <p class="mt-3.5 text-ink-soft">{summary}</p>
+
+    <ul class="mt-5 flex flex-wrap gap-2 font-mono text-[13px]">
+      {tech.map((t) => (
+        <li class="rounded-full border border-line-strong px-3 py-1 text-ink-soft">{t}</li>
+      ))}
+    </ul>
+
+    <div class="mt-7 flex flex-wrap items-center gap-5">
+      <a
+        href={`/proyectos/${project.id}`}
+        class="inline-flex min-h-11 items-center rounded-full bg-primary px-5 font-semibold text-bg transition-transform hover:scale-105"
+      >
+        Ver proyecto ↗
+      </a>
+      {repo && (
+        <a href={repo} class="font-medium transition-colors hover:text-accent">Código</a>
+      )}
+    </div>
+  </div>
+
+  <div
+    class:list={[
+      'flex min-h-80 items-center justify-center overflow-hidden rounded-[20px] font-mono text-[13px] text-ink-muted',
+      reverse && 'lg:order-first',
+    ]}
+    style="background: repeating-linear-gradient(135deg, #1c1838 0 12px, #15122a 12px 24px)"
+  >
+    {image
+      ? <img src={image} alt={`Captura de ${title}`} loading="lazy" class="size-full object-cover" />
+      : <span>[Captura pendiente]</span>}
+  </div>
+</article>

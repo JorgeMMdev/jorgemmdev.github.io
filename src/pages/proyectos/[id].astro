@@ -1,0 +1,55 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+// Le dice a Astro qué páginas tiene que generar: una por proyecto
+export async function getStaticPaths() {
+  const projects = await getCollection('projects', ({ data }) => import.meta.env.DEV || !data.draft);
+  return projects.map((project) => ({
+    params: { id: project.id },   // la parte [id] de la URL
+    props: { project },           // los datos que recibe la página
+  }));
+}
+
+const { project } = Astro.props;
+const { title, category, summary, tech, repo, demo } = project.data;
+const { Content } = await render(project); // convierte el Markdown en HTML
+---
+<Layout title={`${title} | Jorge Muñoz`} description={summary}>
+  <article class="mx-auto max-w-3xl px-6 pt-10 pb-24">
+    <a href="/#proyectos" class="font-mono text-sm text-ink-muted transition-colors hover:text-accent">
+      ← Volver a proyectos
+    </a>
+
+    <p class="mt-10 font-mono text-[13px] text-accent uppercase">{category}</p>
+    <h1 class="mt-3 font-display text-[clamp(2.5rem,6vw,4rem)] leading-[1.05] font-bold tracking-[-0.03em]">
+      {title}
+    </h1>
+    <p class="mt-5 text-lg text-ink-soft">{summary}</p>
+
+    <ul class="mt-6 flex flex-wrap gap-2 font-mono text-[13px]">
+      {tech.map((t) => (
+        <li class="rounded-full border border-line-strong px-3 py-1 text-ink-soft">{t}</li>
+      ))}
+    </ul>
+
+    {(repo || demo) && (
+      <div class="mt-7 flex flex-wrap gap-3">
+        {demo && (
+          <a href={demo} class="inline-flex min-h-11 items-center rounded-full bg-accent px-5 font-semibold text-bg">
+            Ver demo ↗
+          </a>
+        )}
+        {repo && (
+          <a href={repo} class="inline-flex min-h-11 items-center rounded-full border border-line-strong px-5 hover:border-accent hover:text-accent">
+            Código en GitHub
+          </a>
+        )}
+      </div>
+    )}
+
+    <div class="prose prose-invert mt-14 max-w-none prose-headings:font-display prose-a:text-accent prose-strong:text-ink">
+      <Content />
+    </div>
+  </article>
+</Layout>   
