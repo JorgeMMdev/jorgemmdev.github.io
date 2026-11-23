@@ -1,0 +1,28 @@
+---
+const links = [
+  { href: '#proyectos', label: 'Proyectos' },
+  { href: '#sobre-mi', label: 'Sobre mí' },
+  { href: '#formacion', label: 'Formación' },
+];
+---
+<header class="mx-auto flex max-w-[1240px] flex-wrap items-center justify-between gap-4 p-6">
+  <a
+    href="/"
+    aria-label="Inicio"
+    class="flex size-12 items-center justify-center rounded-full bg-primary font-display text-lg font-bold text-bg"
+  >
+    JM
+  </a>
+
+  <nav class="flex flex-wrap items-center gap-7 text-[15px]">
+    {links.map((link) => (
+      <a href={link.href} class="transition-colors hover:text-accent">{link.label}</a>
+    ))}
+    <a
+      href="#contacto"
+      class="inline-flex min-h-11 items-center rounded-full bg-accent px-5 font-semibold text-bg transition-transform hover:scale-105"
+    >
+      Contacto
+    </a>
+  </nav>
+</header>

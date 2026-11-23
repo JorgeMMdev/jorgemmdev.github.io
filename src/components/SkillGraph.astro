@@ -1,0 +1,238 @@
+---
+// ───────── 1. TIPOS ─────────
+// Cada nodo tiene un tipo, como las etiquetas de Neo4j (:Persona, :Area...)
+type NodeKind = 'persona' | 'area' | 'tecnologia' | 'proyecto';
+
+interface GraphNode {
+  id: string;
+  label: string[];      // una o dos líneas de texto
+  kind: NodeKind;
+  x: number;            // posición dentro del viewBox (560 x 520)
+  y: number;
+  labelBelow?: boolean; // para tecnologías: texto debajo del punto en vez de encima
+}
+
+interface GraphEdge {
+  from: string;         // id del nodo de origen
+  to: string;           // id del nodo de destino
+  label?: string;       // nombre de la relación, p. ej. ':DOMINA'
+}
+
+// ───────── 2. DATOS ─────────
+const nodes: GraphNode[] = [
+  { id: 'jorge', label: ['Jorge'], kind: 'persona', x: 280, y: 260 },
+
+  { id: 'bd',  label: ['Bases', 'de datos'], kind: 'area', x: 140, y: 120 },
+  { id: 'ia',  label: ['IA'],                kind: 'area', x: 440, y: 130 },
+  { id: 'web', label: ['Web y', 'móvil'],    kind: 'area', x: 300, y: 430 },
+
+  { id: 'sql',   label: ['SQL'],           kind: 'tecnologia', x: 190, y: 30 },
+  { id: 'mongo', label: ['MongoDB'],       kind: 'tecnologia', x: 50,  y: 60 },
+  { id: 'neo4j', label: ['Neo4j'],         kind: 'tecnologia', x: 40,  y: 190, labelBelow: true },
+  { id: 'dl',    label: ['Deep Learning'], kind: 'tecnologia', x: 520, y: 50 },
+  { id: 'mlops', label: ['MLOps'],         kind: 'tecnologia', x: 530, y: 220, labelBelow: true },
+  { id: 'astro', label: ['Astro'],         kind: 'tecnologia', x: 170, y: 480, labelBelow: true },
+  { id: 'ionic', label: ['Ionic'],         kind: 'tecnologia', x: 430, y: 490, labelBelow: true },
+
+  { id: 'tfm',   label: ['TFM'],         kind: 'proyecto', x: 360, y: 35 },
+  { id: 'banco', label: ['Banco Horas'], kind: 'proyecto', x: 90,  y: 331 },
+  { id: 'tfg',   label: ['TFG'],         kind: 'proyecto', x: 470, y: 360 },
+];
+
+const edges: GraphEdge[] = [
+  { from: 'jorge', to: 'bd',  label: ':DOMINA' },
+  { from: 'jorge', to: 'ia',  label: ':DOMINA' },
+  { from: 'jorge', to: 'web', label: ':DOMINA' },
+
+  { from: 'bd',  to: 'sql' },
+  { from: 'bd',  to: 'mongo' },
+  { from: 'bd',  to: 'neo4j' },
+  { from: 'ia',  to: 'dl' },
+  { from: 'ia',  to: 'mlops' },
+  { from: 'web', to: 'astro' },
+  { from: 'web', to: 'ionic' },
+
+  { from: 'ia',  to: 'tfm' },
+  { from: 'bd',  to: 'banco' },
+  { from: 'web', to: 'tfg' },
+];
+
+// ───────── 3. CÁLCULOS ─────────
+// Un Map permite buscar un nodo por su id rápidamente: byId.get('ia')
+const byId = new Map(nodes.map((node) => [node.id, node]));
+
+// Ángulo de una línea en grados, para girar su etiqueta y que vaya paralela.
+// Si queda boca abajo (más de 90°), la giramos 180° para que se lea bien.
+function readableAngle(a: GraphNode, b: GraphNode): number {
+  let angle = (Math.atan2(b.y - a.y, b.x - a.x) * 180) / Math.PI;
+  if (angle > 90) angle -= 180;
+  if (angle < -90) angle += 180;
+  return angle;
+}
+
+// Ancho de la "píldora" de un proyecto según la longitud del texto
+const pillWidth = (text: string) => Math.max(84, text.length * 7.5 + 28);
+---
+
+<figure class="min-w-0 flex-[1_1_460px]">
+  <svg
+    viewBox="0 0 560 520"
+    role="img"
+    aria-labelledby="graph-title"
+    class="graph block h-auto w-full overflow-visible font-mono"
+  >
+    <title id="graph-title">
+      Grafo de habilidades: Jorge conectado con Bases de datos, IA y Web, cada una con sus tecnologías y proyectos
+    </title>
+
+    <!-- Aristas: van primero para quedar DEBAJO de los nodos -->
+    <g>
+      {edges.map((edge) => {
+        const a = byId.get(edge.from)!;
+        const b = byId.get(edge.to)!;
+        const toProject = b.kind === 'proyecto';
+        return (
+          <line
+            x1={a.x} y1={a.y} x2={b.x} y2={b.y}
+            stroke-width="1.5"
+            class={toProject ? 'flow stroke-accent' : 'stroke-line-strong'}
+          />
+        );
+      })}
+    </g>
+
+    <!-- Etiquetas de las relaciones (:DOMINA) -->
+    <g>
+      {edges.filter((edge) => edge.label).map((edge) => {
+        const a = byId.get(edge.from)!;
+        const b = byId.get(edge.to)!;
+        const mx = (a.x + b.x) / 2;
+        const my = (a.y + b.y) / 2;
+        return (
+          <text
+            x={mx} y={my - 6}
+            text-anchor="middle"
+            font-size="11"
+            transform={`rotate(${readableAngle(a, b)} ${mx} ${my})`}
+            class="fill-ink-muted"
+          >
+            {edge.label}
+          </text>
+        );
+      })}
+    </g>
+
+    <!-- Nodos: cada tipo se dibuja de una forma distinta -->
+    {nodes.map((node) => (
+      <g class="node">
+        {node.kind === 'persona' && (
+          <>
+            <circle cx={node.x} cy={node.y} r="54" class="halo fill-none stroke-primary" stroke-width="2" />
+            <circle cx={node.x} cy={node.y} r="54" class="fill-primary" />
+            <text x={node.x} y={node.y + 6} text-anchor="middle" font-size="17" font-weight="700" class="fill-bg font-display">
+              {node.label[0]}
+            </text>
+          </>
+        )}
+
+        {node.kind === 'area' && (
+          <>
+            <circle cx={node.x} cy={node.y} r="40" stroke-width="2" class="fill-surface stroke-primary" />
+            {node.label.map((line, i) => (
+              <text
+                x={node.x}
+                y={node.y + 4 + (i - (node.label.length - 1) / 2) * 15}
+                text-anchor="middle"
+                font-size="12"
+                class="fill-ink"
+              >
+                {line}
+              </text>
+            ))}
+          </>
+        )}
+
+        {node.kind === 'tecnologia' && (
+          <>
+            <circle cx={node.x} cy={node.y} r="5" class="fill-ink-muted" />
+            <text
+              x={node.x}
+              y={node.labelBelow ? node.y + 22 : node.y - 14}
+              text-anchor="middle"
+              font-size="12"
+              class="fill-ink-soft"
+            >
+              {node.label[0]}
+            </text>
+          </>
+        )}
+
+        {node.kind === 'proyecto' && (
+          <>
+            <rect
+              x={node.x - pillWidth(node.label[0]) / 2}
+              y={node.y - 13}
+              width={pillWidth(node.label[0])}
+              height="26"
+              rx="13"
+              class="fill-accent"
+            />
+            <text x={node.x} y={node.y + 5} text-anchor="middle" font-size="12" class="fill-bg">
+              {node.label[0]}
+            </text>
+          </>
+        )}
+      </g>
+    ))}
+  </svg>
+
+  <figcaption class="mt-2 text-center font-mono text-xs text-ink-muted">
+    MATCH (j:Persona {'{'}nombre: 'Jorge'{'}'})-[:DOMINA]-&gt;(s) RETURN j, s
+  </figcaption>
+</figure>
+
+<style>
+  /* 1. Todo el grafo "flota" suavemente arriba y abajo */
+  .graph {
+    animation: float 8s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { translate: 0 0; }
+    50%      { translate: 0 -10px; }
+  }
+
+  /* 2. Las líneas hacia los proyectos son discontinuas y "fluyen" */
+  .flow {
+    stroke-dasharray: 4 4;
+    animation: flow 1.2s linear infinite;
+  }
+  @keyframes flow {
+    to { stroke-dashoffset: -16; }
+  }
+
+  /* 3. Un halo que late alrededor del nodo central */
+  .halo {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pulse 2.8s ease-out infinite;
+  }
+  @keyframes pulse {
+    from { scale: 1;   opacity: 0.8; }
+    to   { scale: 1.5; opacity: 0; }
+  }
+
+  /* 4. Al pasar el ratón, el nodo crece un poco */
+  .node {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: scale 0.2s ease;
+  }
+  .node:hover {
+    scale: 1.12;
+  }
+
+  /* Accesibilidad: sin animaciones si el usuario las ha desactivado en su sistema */
+  @media (prefers-reduced-motion: reduce) {
+    .graph, .flow, .halo { animation: none; }
+  }
+</style>

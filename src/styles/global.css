@@ -1,1 +1,31 @@
 @import "tailwindcss";
+@import "@fontsource-variable/space-grotesk";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/jetbrains-mono";
+
+@theme {
+  /* Colores */
+  --color-bg: #0d0b1a;
+  --color-surface: #15122a;
+  --color-line: #2e2850;
+  --color-line-strong: #3a3360;
+  --color-ink: #f2f0fa;
+  --color-ink-soft: #c9c4e3;
+  --color-ink-muted: #9c97b8;
+  --color-primary: #a78bfa; /* violeta */
+  --color-accent: #c6f432;  /* lima */
+
+  /* Tipografías */
+  --font-display: "Space Grotesk Variable", sans-serif;
+  --font-sans: "Inter Variable", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", monospace;
+}
+
+@utility text-outline {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--color-primary);
+}
+
+html {
+  scroll-behavior: smooth;
+}
